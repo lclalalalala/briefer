@@ -10,16 +10,17 @@ bedrock_model_ids = [
     "cohere.command-r-plus-v1:0",
 ]
 
+
 def str_to_bool(value):
     if value is None or value == False:
         return False
 
-    return value.lower() in ['true', '1', 't', 'y', 'yes']
+    return value.lower() in ["true", "1", "t", "y", "yes"]
+
 
 def initialize_llm(model_id=None, openai_api_key=None):
     openai_api_key = openai_api_key or config("OPENAI_API_KEY")
     use_azure = config("USE_AZURE", default=False, cast=str_to_bool)
-
 
     if model_id in bedrock_model_ids:
         # Initialize Bedrock using default AWS credentials provider chain
@@ -39,6 +40,7 @@ def initialize_llm(model_id=None, openai_api_key=None):
     else:
         # Initialize OpenAI using environment variables for API key and model name
         llm = ChatOpenAI(
+            base_url=config("OPENAI_API_BASE", default=None),
             temperature=0,
             verbose=False,
             openai_api_key=openai_api_key,
